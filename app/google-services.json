@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "45010082807",
+    "firebase_url": "https://objectify-f00f9.firebaseio.com",
+    "project_id": "objectify-f00f9",
+    "storage_bucket": "objectify-f00f9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:45010082807:android:47141b62e2690aa2c42cf2",
+        "android_client_info": {
+          "package_name": "com.teamelephant.bkmc.objectify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "45010082807-c2b3tcdrigl079nt1iibt80qktq74rtm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCG-WoAhs24HbCrOs0Jo-ExH_5IlPXe1jo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "45010082807-c2b3tcdrigl079nt1iibt80qktq74rtm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
