@@ -11,6 +11,13 @@
         android:id="@+id/cameraFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="de.crysxd.cameraXTracker.CameraFragment"/>
+        android:name="de.crysxd.cameraXTracker.CameraFragment">
+    </fragment>
+    <TextView
+        android:id="@+id/testtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:text="test text"/>
 
 </FrameLayout>

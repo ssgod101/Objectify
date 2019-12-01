@@ -1,5 +1,7 @@
 package com.teamelephant.bkmc.objectify;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -8,8 +10,10 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.util.Log;
 import android.util.Size;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.ImageProxy;
 import androidx.lifecycle.ViewModel;
 
@@ -48,8 +52,9 @@ public class ObjectifyAnalyzer extends ViewModel implements ThreadedImageAnalyze
             FirebaseVision.getInstance().getOnDeviceObjectDetector(options);
     FirebaseVisionImageLabeler objectLabeler = FirebaseVision.getInstance().getOnDeviceImageLabeler();
     ExecutorService executor = Executors.newFixedThreadPool(10);
-    Bitmap currentImage;
-    public ObjectifyAnalyzer(){
+    TextCallback textCallback = null;
+    public ObjectifyAnalyzer(TextCallback callback){
+        this.textCallback = callback;
         handlerThread.start();
     }
     @Override
@@ -116,7 +121,9 @@ public class ObjectifyAnalyzer extends ViewModel implements ThreadedImageAnalyze
                                                                     label = detectedObjects.getResult().get(0);
                                                                 }
                                                                 if(label != null) {
-                                                                    Log.e("CameraXDemo", "######## id: " + detectedObjects.getResult().get(0).getText());
+                                                                    String result = detectedObjects.getResult().get(0).getText();
+                                                                    if(textCallback != null){ textCallback.updateText(result); }
+                                                                    Log.e("CameraXDemo", "######## id: " + result);
                                                                     Log.e("CameraXDemo", "----------------------------");
                                                                 }
                                                             }
