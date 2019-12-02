@@ -6,9 +6,16 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Locale;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.crysxd.cameraXTracker.CameraFragment;
 import de.crysxd.cameraXTracker.ar.ArOverlayView;
@@ -16,15 +23,31 @@ import de.crysxd.cameraXTracker.ar.BoundingBoxArOverlay;
 import de.crysxd.cameraXTracker.ar.PathInterpolator;
 import de.crysxd.cameraXTracker.ar.PositionTranslator;
 
-public class MainActivity extends AppCompatActivity implements TextCallback{
+public class MainActivity extends AppCompatActivity implements TextCallback {
     private ObjectifyAnalyzer imageAnalyzer = new ObjectifyAnalyzer(this);
     private CameraFragment camera;
     TextView textView;
+    //private AtomicBoolean isSpeaking = new AtomicBoolean(false);
+    private TextToSpeech textToSpeech;
     public MainActivity(){ }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener(){
+            @Override
+            public void onInit(int status) {
+                if(status == TextToSpeech.SUCCESS){
+
+                    int ttsLang = textToSpeech.setLanguage(Locale.CANADA);
+                    if(ttsLang == TextToSpeech.LANG_MISSING_DATA || ttsLang == TextToSpeech.LANG_NOT_SUPPORTED){
+                        Toast.makeText(getApplicationContext(), "The Language is not supported!",Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    Toast.makeText(getApplicationContext(), "TTS Initialization failed!",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         textView = findViewById(R.id.testtext);
         camera = (CameraFragment) getSupportFragmentManager().findFragmentById(R.id.cameraFragment);
         BoundingBoxArOverlay boundingBoxArOverlay = new BoundingBoxArOverlay(this, BuildConfig.DEBUG);
@@ -49,7 +72,25 @@ public class MainActivity extends AppCompatActivity implements TextCallback{
         });
     }
     @Override
+    public void onDestroy(){
+        super.onDestroy();
+        if(textToSpeech != null){
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
+    }
+    @Override
     public void updateText(String text){
         ((TextView)findViewById(R.id.testtext)).setText(text);
+    }
+    public void onScreenTap(View view){
+        if(!textToSpeech.isSpeaking()){
+            String text = (String)((TextView)findViewById(R.id.testtext)).getText();
+            int speechStatus = textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null,"");
+            //textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "");
+            if(speechStatus == TextToSpeech.ERROR){
+                Log.e("TTS", "Error in converting Text to Speech!");
+            }
+        }
     }
 }

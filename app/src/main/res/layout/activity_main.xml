@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
     android:keepScreenOn="true"
+    android:onClick="onScreenTap"
     tools:context=".MainActivity">
 
     <fragment
         android:id="@+id/cameraFragment"
+        android:name="de.crysxd.cameraXTracker.CameraFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="de.crysxd.cameraXTracker.CameraFragment">
-    </fragment>
+        android:layout_height="match_parent"></fragment>
+
     <TextView
         android:id="@+id/testtext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:text="test text"/>
+        android:text="test text" />
 
 </FrameLayout>
