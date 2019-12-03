@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Objectify</string>
+    <string name="imageLabel"></string>
 </resources>

@@ -46,13 +46,15 @@ public class ObjectifyAnalyzer extends ViewModel implements ThreadedImageAnalyze
     FirebaseVisionObjectDetectorOptions options =
             new FirebaseVisionObjectDetectorOptions.Builder()
                     .setDetectorMode(FirebaseVisionObjectDetectorOptions.STREAM_MODE)
-                    .enableClassification()  // Optional
+                    .enableClassification()
                     .build();
     FirebaseVisionObjectDetector objectDetector =
             FirebaseVision.getInstance().getOnDeviceObjectDetector(options);
     FirebaseVisionImageLabeler objectLabeler = FirebaseVision.getInstance().getOnDeviceImageLabeler();
     ExecutorService executor = Executors.newFixedThreadPool(10);
     TextCallback textCallback = null;
+
+
     public ObjectifyAnalyzer(TextCallback callback){
         this.textCallback = callback;
         handlerThread.start();
@@ -105,6 +107,7 @@ public class ObjectifyAnalyzer extends ViewModel implements ThreadedImageAnalyze
                                     public void run() {
                                         Rect rect = object.getBoundingBox();
                                         Bitmap bitmap = Bitmap.createBitmap(image.getBitmap(),  rect.left, rect.top,rect.width(),rect.height());
+
                                         objectLabeler.processImage(FirebaseVisionImage.fromBitmap(bitmap))
                                                 .addOnCompleteListener(
                                                         new OnCompleteListener<List<FirebaseVisionImageLabel>>() {
@@ -121,10 +124,13 @@ public class ObjectifyAnalyzer extends ViewModel implements ThreadedImageAnalyze
                                                                     label = detectedObjects.getResult().get(0);
                                                                 }
                                                                 if(label != null) {
-                                                                    String result = detectedObjects.getResult().get(0).getText();
+                                                                    if(label.getConfidence()>0.5){
+                                                                    String result = label.getText();
                                                                     if(textCallback != null){ textCallback.updateText(result); }
                                                                     Log.e("CameraXDemo", "######## id: " + result);
                                                                     Log.e("CameraXDemo", "----------------------------");
+
+                                                                }
                                                                 }
                                                             }
                                                         });

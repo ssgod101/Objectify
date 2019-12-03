@@ -2,20 +2,17 @@ package com.teamelephant.bkmc.objectify;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.Voice;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Locale;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.crysxd.cameraXTracker.CameraFragment;
 import de.crysxd.cameraXTracker.ar.ArOverlayView;
@@ -27,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements TextCallback {
     private ObjectifyAnalyzer imageAnalyzer = new ObjectifyAnalyzer(this);
     private CameraFragment camera;
     TextView textView;
+    String text;
     //private AtomicBoolean isSpeaking = new AtomicBoolean(false);
     private TextToSpeech textToSpeech;
     public MainActivity(){ }
@@ -40,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements TextCallback {
                 if(status == TextToSpeech.SUCCESS){
 
                     int ttsLang = textToSpeech.setLanguage(Locale.CANADA);
+                    textToSpeech.setVoice(new Voice(null,null, Voice.QUALITY_VERY_HIGH,0,false,null));
                     if(ttsLang == TextToSpeech.LANG_MISSING_DATA || ttsLang == TextToSpeech.LANG_NOT_SUPPORTED){
                         Toast.makeText(getApplicationContext(), "The Language is not supported!",Toast.LENGTH_SHORT).show();
                     }
@@ -48,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements TextCallback {
                 }
             }
         });
-        textView = findViewById(R.id.testtext);
+        textView = findViewById(R.id.imageLabel);
         camera = (CameraFragment) getSupportFragmentManager().findFragmentById(R.id.cameraFragment);
         BoundingBoxArOverlay boundingBoxArOverlay = new BoundingBoxArOverlay(this, BuildConfig.DEBUG);
         //imageAnalyzer = ViewModelProviders.of(this).get(ObjectifyAnalyzer.class);
@@ -80,12 +79,12 @@ public class MainActivity extends AppCompatActivity implements TextCallback {
         }
     }
     @Override
-    public void updateText(String text){
-        ((TextView)findViewById(R.id.testtext)).setText(text);
-    }
+   // public void updateText(String text){ ((TextView)findViewById(R.id.testtext)).setText(text); }
+    public void updateText(String t){ text = t; textView.setText(t); }
     public void onScreenTap(View view){
         if(!textToSpeech.isSpeaking()){
-            String text = (String)((TextView)findViewById(R.id.testtext)).getText();
+           // String text = (String)((TextView)findViewById(R.id.testtext)).getText();
+
             int speechStatus = textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null,"");
             //textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "");
             if(speechStatus == TextToSpeech.ERROR){
