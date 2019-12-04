@@ -84,8 +84,9 @@ public class MainActivity extends AppCompatActivity implements TextCallback {
     @Override
    // public void updateText(String text){ ((TextView)findViewById(R.id.testtext)).setText(text); }
     public void updateText(String t){
-        text = t; textView.setText(t);
-        if(!textToSpeech.isSpeaking() && this.speakerMode){
+        if(!speakerMode){ text = t; textView.setText(t); }
+        else if(!textToSpeech.isSpeaking()){
+            text = t; textView.setText(t);
             // String text = (String)((TextView)findViewById(R.id.testtext)).getText();
 
             int speechStatus = textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null,"");
