@@ -25,9 +25,9 @@ public class MainActivity extends AppCompatActivity implements TextCallback {
     private CameraFragment camera;
     TextView textView;
     String text;
-    //private AtomicBoolean isSpeaking = new AtomicBoolean(false);
+    private boolean speakerMode;
     private TextToSpeech textToSpeech;
-    public MainActivity(){ }
+    public MainActivity(){speakerMode = false; }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,13 +78,26 @@ public class MainActivity extends AppCompatActivity implements TextCallback {
             textToSpeech.shutdown();
         }
     }
+    public void toggleSpeckMode(View view){
+        this.speakerMode = !this.speakerMode;
+    }
     @Override
    // public void updateText(String text){ ((TextView)findViewById(R.id.testtext)).setText(text); }
-    public void updateText(String t){ text = t; textView.setText(t); }
+    public void updateText(String t){
+        text = t; textView.setText(t);
+        if(!textToSpeech.isSpeaking() && this.speakerMode){
+            // String text = (String)((TextView)findViewById(R.id.testtext)).getText();
+
+            int speechStatus = textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null,"");
+            //textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "");
+            if(speechStatus == TextToSpeech.ERROR){
+                Log.e("TTS", "Error in converting Text to Speech!");
+            }
+        }
+    }
     public void onScreenTap(View view){
         if(!textToSpeech.isSpeaking()){
            // String text = (String)((TextView)findViewById(R.id.testtext)).getText();
-
             int speechStatus = textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null,"");
             //textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "");
             if(speechStatus == TextToSpeech.ERROR){
