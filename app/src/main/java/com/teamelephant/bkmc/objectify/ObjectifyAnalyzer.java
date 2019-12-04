@@ -124,7 +124,7 @@ public class ObjectifyAnalyzer extends ViewModel implements ThreadedImageAnalyze
                                                                     label = detectedObjects.getResult().get(0);
                                                                 }
                                                                 if(label != null) {
-                                                                    if(label.getConfidence()>0.5){
+                                                                    if(label.getConfidence()>0.7){
                                                                     String result = label.getText();
                                                                     if(textCallback != null){ textCallback.updateText(result); }
                                                                     Log.e("CameraXDemo", "######## id: " + result);

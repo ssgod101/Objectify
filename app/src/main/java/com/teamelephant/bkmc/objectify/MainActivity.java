@@ -82,23 +82,23 @@ public class MainActivity extends AppCompatActivity implements TextCallback {
         this.speakerMode = !this.speakerMode;
     }
     @Override
-   // public void updateText(String text){ ((TextView)findViewById(R.id.testtext)).setText(text); }
     public void updateText(String t){
-        if(!speakerMode){ text = t; textView.setText(t); }
+        text = textView.getText().toString();
+        if(!speakerMode){ if(!text.equals(t)){ textView.setText(t);} }
         else if(!textToSpeech.isSpeaking()){
-            text = t; textView.setText(t);
-            // String text = (String)((TextView)findViewById(R.id.testtext)).getText();
+            if(!text.equals(t)) {
+                text = t;
+                textView.setText(t);
+                int speechStatus = textToSpeech.speak(t, TextToSpeech.QUEUE_FLUSH, null, "");
 
-            int speechStatus = textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null,"");
-            //textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "");
-            if(speechStatus == TextToSpeech.ERROR){
-                Log.e("TTS", "Error in converting Text to Speech!");
+                if (speechStatus == TextToSpeech.ERROR) {
+                    Log.e("TTS", "Error in converting Text to Speech!");
+                }
             }
         }
     }
     public void onScreenTap(View view){
-        if(!textToSpeech.isSpeaking()){
-           // String text = (String)((TextView)findViewById(R.id.testtext)).getText();
+        if(!textToSpeech.isSpeaking()&& !speakerMode){
             int speechStatus = textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null,"");
             //textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "");
             if(speechStatus == TextToSpeech.ERROR){
